@@ -2,3 +2,4 @@ src/build
 src/scheme
 tools/term
 .DS_Store
+make.out

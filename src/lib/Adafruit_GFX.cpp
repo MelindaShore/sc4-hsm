@@ -77,6 +77,11 @@ POSSIBILITY OF SUCH DAMAGE.
   }
 #endif
 
+#ifndef UNUSED
+#define UNUSED(x) [&x]{}()
+#endif
+
+
 Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
   _width = WIDTH;
   _height = HEIGHT;
@@ -395,7 +400,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                               int16_t w, int16_t h, uint16_t color) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
-  uint8_t byte;
+  uint8_t byte = 0;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
@@ -417,7 +422,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                               uint16_t bg) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
-  uint8_t byte;
+  uint8_t byte = 0;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
@@ -438,7 +443,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w,
                               int16_t h, uint16_t color) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
-  uint8_t byte;
+  uint8_t byte = 0;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
@@ -457,7 +462,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w,
                               int16_t h, uint16_t color, uint16_t bg) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
-  uint8_t byte;
+  uint8_t byte = 0;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
@@ -480,7 +485,7 @@ void Adafruit_GFX::drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
                                int16_t w, int16_t h, uint16_t color) {
 
   int16_t i, j, byteWidth = (w + 7) / 8;
-  uint8_t byte;
+  uint8_t byte = 0;
 
   for (j = 0; j < h; j++) {
     for (i = 0; i < w; i++) {
@@ -494,8 +499,8 @@ void Adafruit_GFX::drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap,
   }
 }
 
-size_t Adafruit_GFX::write(uint8_t c) {
 
+size_t Adafruit_GFX::write(uint8_t c) {
   if (!gfxFont) { // 'Classic' built-in font
 
     if (c == '\n') {
@@ -540,9 +545,7 @@ size_t Adafruit_GFX::write(uint8_t c) {
       }
     }
   }
-#if ARDUINO >= 100
   return 1;
-#endif
 }
 
 // Draw a character
@@ -594,10 +597,11 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
     uint16_t bo = pgm_read_word(&glyph->bitmapOffset);
     uint8_t w = pgm_read_byte(&glyph->width), h = pgm_read_byte(&glyph->height),
             xa = pgm_read_byte(&glyph->xAdvance);
+    UNUSED(xa) ;
     int8_t xo = pgm_read_byte(&glyph->xOffset),
            yo = pgm_read_byte(&glyph->yOffset);
-    uint8_t xx, yy, bits, bit = 0;
-    int16_t xo16, yo16;
+    uint8_t xx, yy, bits = 0, bit = 0;
+    int16_t xo16 = 0, yo16 = 0;
 
     if (size > 1) {
       xo16 = xo;
@@ -909,6 +913,7 @@ int16_t Adafruit_GFX::width(void) const { return _width; }
 int16_t Adafruit_GFX::height(void) const { return _height; }
 
 void Adafruit_GFX::invertDisplay(boolean i) {
+  UNUSED(i) ;
   // Do nothing, must be subclassed if supported by hardware
 }
 
